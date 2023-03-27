@@ -3,8 +3,8 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { resultPlaylist } from "../Redux/Actions/Action";
+// import { useDispatch } from "react-redux";
+// import { resultPlaylist } from "../Redux/Actions/Action";
 import "./PlaylistComponent.css";
 const PlaylistComponent = () => {
   const [loader, setloader] = useState(true);
@@ -13,14 +13,14 @@ const PlaylistComponent = () => {
   const [importtext, setImportText] = useState("");
   const [importflag, setImportFlag] = useState(false);
   let navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const PlaylistClicker = (e) => {
     if (JSON.parse(localStorage.getItem("Playlists"))[e].length === 0) {
       toast.error("playlist is empty");
     } else {
-      dispatch(resultPlaylist(e));
-      navigate("/playlist/playlistdetails");
+      // dispatch(resultPlaylist(e));
+      navigate(`/playlist/${e}`);
     }
   };
 
@@ -54,9 +54,11 @@ const PlaylistComponent = () => {
       toast.error("not deleted");
     }
   };
-
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("Playlists").length) === 2) {
+    if (
+      JSON.parse(localStorage.getItem("Playlists")) === null ||
+      JSON.parse(localStorage.getItem("Playlists").length) === 2
+    ) {
       setAvailablePlaylist(false);
       setloader(false);
     } else {

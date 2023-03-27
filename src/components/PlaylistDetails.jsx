@@ -4,8 +4,10 @@ import Api from "./Api";
 import { useNavigate } from "react-router";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { ToastContainer, toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+
 import "react-toastify/dist/ReactToastify.css";
-const PlaylistDetails = ({ props }) => {
+const PlaylistDetails = () => {
   const mainURL = "/player?url=";
   const [PlaylistData, setPlaylistData] = useState([]);
   const Idarray = [];
@@ -14,12 +16,14 @@ const PlaylistDetails = ({ props }) => {
   const [flag, setFlag] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const { playlist } = useParams();
+
   const Initialiazation = async () => {
-    if (props === undefined) {
+    if (playlist === undefined) {
       setError(true);
     } else {
       const a = JSON.parse(localStorage.getItem("Playlists"));
-      const hey = await a[props]?.map(async (items) => {
+      const hey = await a[playlist]?.map(async (items) => {
         if (!Idarray.includes(items.id)) {
           Idarray.push(items.id);
         }
@@ -44,7 +48,7 @@ const PlaylistDetails = ({ props }) => {
 
   const DeleteFunction = (e) => {
     setloader(true);
-    const arr = JSON.parse(localStorage.getItem("Playlists"))[props].filter(
+    const arr = JSON.parse(localStorage.getItem("Playlists"))[playlist].filter(
       (items) => {
         return items.id !== e;
       }
@@ -53,13 +57,13 @@ const PlaylistDetails = ({ props }) => {
       "Playlists",
       JSON.stringify({
         ...JSON.parse(localStorage.getItem("Playlists")),
-        [props]: arr,
+        [playlist]: arr,
       })
     );
     const a = JSON.parse(localStorage.getItem("Playlists"));
-    setPlaylistData(a[props]);
+    setPlaylistData(a[playlist]);
     toast.success("song deleted");
-    console.log(a[props]);
+    console.log(a[playlist]);
     setFlag(!flag);
   };
 
@@ -82,7 +86,7 @@ const PlaylistDetails = ({ props }) => {
         pauseOnHover
         theme="dark"
       />
-      {(!props || error) && (
+      {(!playlist || error) && (
         <>
           <div
             className="container"
@@ -104,7 +108,7 @@ const PlaylistDetails = ({ props }) => {
         </>
       )}
       {/* Simple Loader */}
-      {loader && props && (
+      {loader && playlist && (
         <div
           className="container"
           style={{ display: "flex", justifyContent: "center" }}
@@ -124,7 +128,7 @@ const PlaylistDetails = ({ props }) => {
       )}
 
       {/* This is when play is click on playlist (all the music in playlist here). */}
-      {!loader && props && (
+      {!loader && playlist && (
         <div
           style={{
             display: "flex",

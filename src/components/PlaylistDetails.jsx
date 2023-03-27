@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-
 import "react-toastify/dist/ReactToastify.css";
 const PlaylistDetails = () => {
   const mainURL = "/player?url=";
@@ -15,6 +14,7 @@ const PlaylistDetails = () => {
   const [data, setData] = useState([]);
   const [flag, setFlag] = useState(false);
   const [error, setError] = useState(false);
+  const [Dragable, setDragable] = useState(false);
   const navigate = useNavigate();
   const { playlist } = useParams();
 
@@ -63,8 +63,54 @@ const PlaylistDetails = () => {
     const a = JSON.parse(localStorage.getItem("Playlists"));
     setPlaylistData(a[playlist]);
     toast.success("song deleted");
-    console.log(a[playlist]);
+    // console.log(a[playlist]);
     setFlag(!flag);
+  };
+
+  // save reference for dragitem and dragoveritem
+
+  const dragItem = React.useRef(null);
+  const dragOverItem = React.useRef(null);
+
+  // const onDragStart = (e, index) => {
+  //   console.log("START", index);
+  // };
+  // const onDragEnter = (e, index) => {
+  //   console.log("Enter", index);
+  // };
+  // const onDragEnd = (e) => {
+  //   console.log("END");
+  // };
+
+  //handle dragsorting
+  const HandleSort = () => {
+    //duplicate items
+    let playlistt = [...data];
+
+    //remove and save drag item content
+    const dragItemContent = playlistt.splice(dragItem.current, 1)[0];
+
+    //switch the position
+
+    playlistt.splice(dragOverItem.current, 0, dragItemContent);
+
+    //reset the position of ref
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+
+    setData(playlistt);
+    // console.log(playlistt);
+    const a = playlistt.map((items) => {
+      return { id: items.data.storageID, VideoID: items.data.video_url };
+    });
+    localStorage.setItem(
+      "Playlists",
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem("Playlists")),
+        [playlist]: a,
+      })
+    );
   };
 
   useEffect(() => {
@@ -137,9 +183,18 @@ const PlaylistDetails = () => {
             flexWrap: "wrap",
           }}
         >
-          {data?.map((items) => {
+          {data?.map((items, index) => {
             return (
-              <div key={Math.random()} style={{ margin: "10px" }}>
+              <div
+                key={Math.random()}
+                style={{ margin: "10px", cursor: `default` }}
+                draggable={Dragable}
+                onDragStart={(e) => (dragItem.current = index)}
+                onDragEnter={(e) => (dragOverItem.current = index)}
+                onDragEnd={HandleSort}
+                onDragOver={(e) => e.preventDefault()}
+                onClick={() => setDragable(false)}
+              >
                 <MyPlayerPlaylist
                   video_url={items.data.video_url}
                   id={items.data.id}

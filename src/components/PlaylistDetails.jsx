@@ -72,16 +72,6 @@ const PlaylistDetails = () => {
   const dragItem = React.useRef(null);
   const dragOverItem = React.useRef(null);
 
-  // const onDragStart = (e, index) => {
-  //   console.log("START", index);
-  // };
-  // const onDragEnter = (e, index) => {
-  //   console.log("Enter", index);
-  // };
-  // const onDragEnd = (e) => {
-  //   console.log("END");
-  // };
-
   //handle dragsorting
   const HandleSort = () => {
     //duplicate items

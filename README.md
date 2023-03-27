@@ -1,3 +1,13 @@
+# Link : https://novamusicfront.netlify.app/
+
+Steps to use:
+
+1) Enter youtube video url
+2) add to play
+3) create one if no playists
+4) go to playlists page from options
+5) click play and done.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

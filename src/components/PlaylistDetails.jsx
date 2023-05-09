@@ -32,17 +32,19 @@ const PlaylistDetails = () => {
         );
         return fetccherr;
       });
-      Promise.all(hey).then((rest) => {
-        var data = rest;
-        var newarray = Idarray;
-        var merged = data.map(function (value, index) {
-          var newValue = value;
-          newValue.data.storageID = newarray[index];
-          return newValue;
-        });
-        setData(merged);
-        setloader(false);
+      const results = await Promise.all(hey.map((p) => p.catch((e) => e)));
+      const validResults = results.filter(
+        (result) => !(result instanceof Error)
+      );
+
+      var newarray = Idarray;
+      var merged = validResults.map(function (value, index) {
+        var newValue = value;
+        newValue.data.storageID = newarray[index];
+        return newValue;
       });
+      setData(merged);
+      setloader(false);
     }
   };
 

@@ -3,6 +3,10 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShareFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { AES } from "crypto-js";
+
 // import { useDispatch } from "react-redux";
 // import { resultPlaylist } from "../Redux/Actions/Action";
 import "./PlaylistComponent.css";
@@ -12,6 +16,7 @@ const PlaylistComponent = () => {
   const [deleteflag, setDeleteFlag] = useState(false);
   const [importtext, setImportText] = useState("");
   const [importflag, setImportFlag] = useState(false);
+  const secret = "test key";
   let navigate = useNavigate();
   // const dispatch = useDispatch();
 
@@ -54,6 +59,38 @@ const PlaylistComponent = () => {
       toast.error("not deleted");
     }
   };
+  const SharePlaylistHandler = (e, Pname) => {
+    // let bytes;
+
+    e.preventDefault();
+    const playlist = JSON.parse(localStorage.getItem("Playlists"));
+    //  navigator.clipboard.writeText(JSON.stringify(playlist[Pname]));
+    //  toast.success("Copies!");
+    console.log(JSON.stringify(playlist[Pname]));
+    const cipherText = AES.encrypt(
+      JSON.stringify({ [Pname]: playlist[Pname] }),
+      secret
+    );
+    console.log(cipherText.toString());
+
+    if (navigator.share) {
+      navigator.clipboard.writeText(cipherText);
+      toast.success("Copies!");
+      // navigator
+      //   .share({
+      //     text: cipherText.toString(),
+      //   })
+      //   .then(() => {
+      //     console.log("Sharing successfull");
+      //   })
+      //   .catch(() => {
+      //     console.log("Sharing failed");
+      //   });
+    } else {
+      console.log("Sorry! Your browser does not support Web Share API");
+    }
+  };
+
   useEffect(() => {
     if (
       JSON.parse(localStorage.getItem("Playlists")) === null ||
@@ -71,7 +108,7 @@ const PlaylistComponent = () => {
     <React.Fragment>
       <ToastContainer
         position="top-center"
-        autoClose={3000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -180,6 +217,21 @@ const PlaylistComponent = () => {
                           alignContent: "space-evenly",
                         }}
                       >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "right",
+                            marginTop: "-10px",
+                            marginRight: "10px",
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faShareFromSquare}
+                            onClick={(e) => {
+                              SharePlaylistHandler(e, items);
+                            }}
+                          ></FontAwesomeIcon>
+                        </div>
                         <h5
                           style={{
                             textTransform: "uppercase",

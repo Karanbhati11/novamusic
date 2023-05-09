@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
-
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Api from "./Api";
 const MyPlayerPlaylist = ({
   // video_url,
   // id,
@@ -9,6 +11,8 @@ const MyPlayerPlaylist = ({
   // storageID,
   DeleteFunction,
 }) => {
+  const [test, settest] = useState("");
+
   return (
     <div className="playermain">
       <div className="card" style={{ width: "18rem" }}>
@@ -32,7 +36,14 @@ const MyPlayerPlaylist = ({
           </h5>
         </div>
         <ul className="list-group list-group-flush">
-          <li className="list-group-item" style={{ background: "#f1f3f4" }}>
+          <li
+            className="list-group-item"
+            style={{
+              background: "#f1f3f4",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <ReactAudioPlayer
               style={{
                 width: " 17.5rem",
@@ -44,7 +55,28 @@ const MyPlayerPlaylist = ({
               src={audiourl}
               autoPlay={false}
               controls
+              // download={`${meta.title}.mp3`}
+              controlsList="nodownload noplaybackrate"
             />
+            <a
+              href={test}
+              download={`${meta.title}.mp3`}
+              onClick={(e) => {
+                // e.preventDefault();
+
+                Api.get(`/download?url=${encodeURIComponent(audiourl)}`).then(
+                  (res) => {
+                    console.log(res.data);
+                    const data = Uint8Array.from(res.data.data);
+                    const content = new Blob([data.buffer]);
+                    const encodedUri = URL.createObjectURL(content);
+                    settest(encodedUri);
+                  }
+                );
+              }}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+            </a>
           </li>
           <button
             className="list-group-item"

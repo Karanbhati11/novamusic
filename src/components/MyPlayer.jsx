@@ -160,7 +160,12 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
         </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item" style={{ background: "#f1f3f4" }}>
-            <ReactAudioPlayer src={audiourl} autoPlay={false} controls />
+            <ReactAudioPlayer
+              src={audiourl}
+              download={`${meta.title}.mp3`}
+              autoPlay={false}
+              controls
+            />
           </li>
           <button
             className="list-group-item"

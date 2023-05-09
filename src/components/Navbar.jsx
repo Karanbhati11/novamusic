@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ name }) => {
   let navigate = useNavigate();
 
   return (
@@ -13,7 +13,7 @@ const Navbar = () => {
             style={{ color: "wheat" }}
             onClick={() => navigate("/")}
           >
-            Nova Music
+            {name}
           </span>
 
           <div className="dropdown">

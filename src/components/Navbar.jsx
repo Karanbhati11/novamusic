@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ name }) => {
+const Navbar = ({ name ,pname}) => {
   let navigate = useNavigate();
 
   return (
@@ -10,10 +10,17 @@ const Navbar = ({ name }) => {
         <div className="container-fluid">
           <span
             className="navbar-brand mb-0 h1"
-            style={{ color: "wheat" }}
+            style={{ color: "wheat" ,cursor:"pointer"}}
             onClick={() => navigate("/")}
           >
             {name}
+          </span>
+          <span
+            className="navbar-brand mb-0 h1"
+            style={{ color: "white" ,cursor:"pointer"}}
+            onClick={() => navigate("/")}
+          >
+            {pname}
           </span>
 
           <div className="dropdown">

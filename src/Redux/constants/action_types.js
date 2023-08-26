@@ -1,3 +1,4 @@
 export const ActionTypes = {
   PLAYLISTDETAILS: "PLAYLISTDETAILS",
+  NEXTSONG: "NEXTSONG",
 };

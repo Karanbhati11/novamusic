@@ -6,6 +6,9 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+// import Navbar from "./Navbar";
+import { useSelector } from "react-redux";
+
 const PlaylistDetails = () => {
   const mainURL = "/player?url=";
   const [PlaylistData, setPlaylistData] = useState([]);
@@ -15,9 +18,10 @@ const PlaylistDetails = () => {
   const [flag, setFlag] = useState(false);
   const [error, setError] = useState(false);
   const [Dragable, setDragable] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
   const navigate = useNavigate();
   const { playlist } = useParams();
-
+  const Results = useSelector((state) => state.nextsongdata.results);
   const Initialiazation = async () => {
     if (playlist === undefined) {
       setError(true);
@@ -126,6 +130,7 @@ const PlaylistDetails = () => {
       />
       {(!playlist || error) && (
         <>
+          {/* <Navbar name="Nova" />  */}
           <div
             className="container"
             style={{
@@ -167,38 +172,50 @@ const PlaylistDetails = () => {
 
       {/* This is when play is click on playlist (all the music in playlist here). */}
       {!loader && playlist && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "stretch",
-            flexWrap: "wrap",
-          }}
-        >
-          {data?.map((items, index) => {
-            return (
-              <div
-                key={Math.random()}
-                style={{ margin: "10px", cursor: `default` }}
-                draggable={Dragable}
-                onDragStart={(e) => (dragItem.current = index)}
-                onDragEnter={(e) => (dragOverItem.current = index)}
-                onDragEnd={HandleSort}
-                onDragOver={(e) => e.preventDefault()}
-                onClick={() => setDragable(false)}
-              >
-                <MyPlayerPlaylist
-                  video_url={items.data.video_url}
-                  id={items.data.id}
-                  audiourl={items.data.url}
-                  meta={items.data.meta}
-                  storageID={items.data.storageID}
-                  DeleteFunction={(e) => DeleteFunction(items.data.storageID)}
-                  loader={loader}
-                />
-              </div>
-            );
-          })}
+        <div>
+          {/* <Navbar name="Nova"pname={playlist} />  */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "stretch",
+              flexWrap: "wrap",
+            }}
+          >
+            {data?.map((items, index) => {
+              var auto=false;
+              if (index === Results) {
+                auto = true;
+              }
+
+              return (
+                <div
+                  key={Math.random()}
+                  style={{ margin: "10px", cursor: `default` }}
+                  draggable={Dragable}
+                  onDragStart={(e) => (dragItem.current = index)}
+                  onDragEnter={(e) => (dragOverItem.current = index)}
+                  onDragEnd={HandleSort}
+                  onDragOver={(e) => e.preventDefault()}
+                  onClick={() => setDragable(false)}
+                >
+                  <MyPlayerPlaylist
+                    video_url={items.data.video_url}
+                    songs={data}
+                    index={index}
+                    nextIndex={Results}
+                    autoPlay={auto}
+                    id={items.data.id}
+                    audiourl={items.data.url}
+                    meta={items.data.meta}
+                    storageID={items.data.storageID}
+                    DeleteFunction={(e) => DeleteFunction(items.data.storageID)}
+                    loader={loader}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </>

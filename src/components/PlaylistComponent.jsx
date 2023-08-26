@@ -66,12 +66,12 @@ const PlaylistComponent = () => {
     const playlist = JSON.parse(localStorage.getItem("Playlists"));
     //  navigator.clipboard.writeText(JSON.stringify(playlist[Pname]));
     //  toast.success("Copies!");
-    console.log(JSON.stringify(playlist[Pname]));
+    // console.log(JSON.stringify(playlist[Pname]));
     const cipherText = AES.encrypt(
       JSON.stringify({ [Pname]: playlist[Pname] }),
       secret
     );
-    console.log(cipherText.toString());
+    // console.log(cipherText.toString());
 
     if (navigator.share) {
       navigator.clipboard.writeText(cipherText);

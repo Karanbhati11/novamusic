@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
+import { nextSong } from "../Redux/Actions/Action";
 import Api from "./Api";
 const MyPlayerPlaylist = ({
   // video_url,
-  // id,
+  id,
   meta,
   audiourl,
   // storageID,
   DeleteFunction,
+  index,
+  autoPlay
 }) => {
   const [test, settest] = useState("");
+  const [loopColor, setColor] = useState("grey");
+  const [loop, setLoop] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <div className="playermain">
@@ -53,12 +60,14 @@ const MyPlayerPlaylist = ({
                 color: "red",
               }}
               src={audiourl}
-              autoPlay={false}
+              autoPlay={autoPlay}
               controls
               // download={`${meta.title}.mp3`}
+              loop={loop}
+              onEnded={() => dispatch(nextSong(index + 1))}
               controlsList="nodownload noplaybackrate"
             />
-            <a
+            {/* <a
               href={test}
               download={`${meta.title}.mp3`}
               onClick={(e) => {
@@ -76,7 +85,24 @@ const MyPlayerPlaylist = ({
               }}
             >
               <FontAwesomeIcon icon={faDownload} />
-            </a>
+            </a> */}
+            <FontAwesomeIcon
+              icon={faRepeat}
+              style={{
+                marginLeft: "5px",
+                color: `${loopColor}`,
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (loopColor === "grey") {
+                  setColor("blue");
+                  setLoop(true);
+                } else {
+                  setColor("grey");
+                  setLoop(false);
+                }
+              }}
+            />
           </li>
           <button
             className="list-group-item"

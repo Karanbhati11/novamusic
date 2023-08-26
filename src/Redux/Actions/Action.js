@@ -5,3 +5,9 @@ export const resultPlaylist = (results) => {
     payload: results,
   };
 };
+export const nextSong = (results) => {
+  return {
+    type: ActionTypes.NEXTSONG,
+    payload: results,
+  };
+};

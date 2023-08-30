@@ -18,7 +18,6 @@ const PlaylistDetails = () => {
   const [flag, setFlag] = useState(false);
   const [error, setError] = useState(false);
   const [Dragable, setDragable] = useState(false);
-  const [autoPlay, setAutoPlay] = useState(false);
   const navigate = useNavigate();
   const { playlist } = useParams();
   const Results = useSelector((state) => state.nextsongdata.results);

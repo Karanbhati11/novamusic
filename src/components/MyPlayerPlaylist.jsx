@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import ReactAudioPlayer from "react-audio-player";
-import { faDownload, faRepeat } from "@fortawesome/free-solid-svg-icons";
+// import ReactAudioPlayer from "react-audio-player";
+import {
+  // faDownload,
+  faRepeat,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
 import { nextSong } from "../Redux/Actions/Action";
-import Api from "./Api";
+// import Api from "./Api";
+
 const MyPlayerPlaylist = ({
   // video_url,
   id,
@@ -13,9 +17,9 @@ const MyPlayerPlaylist = ({
   // storageID,
   DeleteFunction,
   index,
-  autoPlay
+  autoPlay,
 }) => {
-  const [test, settest] = useState("");
+  // const [test, settest] = useState("");
   const [loopColor, setColor] = useState("grey");
   const [loop, setLoop] = useState(false);
   const dispatch = useDispatch();
@@ -51,7 +55,7 @@ const MyPlayerPlaylist = ({
               alignItems: "center",
             }}
           >
-            <ReactAudioPlayer
+            {/* <audio
               style={{
                 width: " 17.5rem",
                 marginLeft: "-12.5px",
@@ -63,10 +67,37 @@ const MyPlayerPlaylist = ({
               autoPlay={autoPlay}
               controls
               // download={`${meta.title}.mp3`}
+              title={`${meta.title}.mp3`}
               loop={loop}
               onEnded={() => dispatch(nextSong(index + 1))}
-              controlsList="nodownload noplaybackrate"
-            />
+              controlsList="noplaybackrate"
+
+              
+            /> */}
+            {/* <audio
+              // download={`${meta.title}.mp3`}
+              title={`${meta.title}.mp3`}
+            /> */}
+            <audio
+              autoPlay={autoPlay}
+              controls
+              loop={loop}
+              onEnded={() => dispatch(nextSong(index + 1))}
+              controlsList="noplaybackrate"
+              style={{
+                width: " 17.5rem",
+                marginLeft: "-12.5px",
+                outline: "none",
+                backgroundColor: "#f1f3f4",
+                color: "red",
+              }}
+            >
+              <source
+                src={audiourl}
+                type="audio/mp3"
+                title={`${meta.title}.mp3`}
+              />
+            </audio>
             {/* <a
               href={test}
               download={`${meta.title}.mp3`}
@@ -86,6 +117,9 @@ const MyPlayerPlaylist = ({
             >
               <FontAwesomeIcon icon={faDownload} />
             </a> */}
+            {/* <button onClick={()=>{console.log(audiourl)}}>
+              <FontAwesomeIcon icon={faDownload} />
+            </button> */}
             <FontAwesomeIcon
               icon={faRepeat}
               style={{

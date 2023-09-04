@@ -23,7 +23,7 @@ const MyPlayerPlaylist = ({
   const [loopColor, setColor] = useState("grey");
   const [loop, setLoop] = useState(false);
   const dispatch = useDispatch();
-  const audio = document.getElementById("audio");
+  const audio = document.getElementById("audioplayer");
 
   const PlayerHandler = () => {
     navigator.mediaSession.metadata = new window.MediaMetadata({
@@ -51,12 +51,6 @@ const MyPlayerPlaylist = ({
     });
   };
 
-  const PauseHandler = () => {
-    navigator.mediaSession.setActionHandler("pause", () => {
-      audio.pause();
-      console.log("paused");
-    });
-  };
   return (
     <div className="playermain">
       <div className="card" style={{ width: "18rem" }}>
@@ -112,7 +106,7 @@ const MyPlayerPlaylist = ({
               title={`${meta.title}.mp3`}
             /> */}
             <audio
-              id="audio"
+              id="audioplayer"
               autoPlay={autoPlay}
               controls
               loop={loop}
@@ -127,9 +121,6 @@ const MyPlayerPlaylist = ({
               }}
               onPlay={() => {
                 PlayerHandler();
-              }}
-              onPause={() => {
-                PauseHandler();
               }}
             >
               <source

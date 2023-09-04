@@ -46,6 +46,7 @@ const MyPlayerPlaylist = ({
       console.log("pause");
     });
     navigator.mediaSession.setActionHandler("nexttrack", () => {
+      audio.pause();
       dispatch(nextSong(index + 1));
     });
   };

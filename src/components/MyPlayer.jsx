@@ -9,6 +9,7 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
   const [pname, setPname] = useState("");
   const [availableplaylist, setAvailablePlaylist] = useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const audio = document.getElementById("audio");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function openModal() {
@@ -17,6 +18,28 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
   function closeModal() {
     setIsOpen(false);
   }
+
+  const PlayerHandler = () => {
+    navigator.mediaSession.metadata = new window.MediaMetadata({
+      title: meta.title,
+      artwork: [
+        {
+          src: meta.thumbnail,
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+    });
+
+    navigator.mediaSession.setActionHandler("play", () => {
+      audio.play();
+      console.log("playing");
+    });
+    navigator.mediaSession.setActionHandler("pause", () => {
+      audio.pause();
+      console.log("pause");
+    });
+  };
 
   const ADDER = (e) => {
     e.preventDefault();
@@ -160,11 +183,13 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
         </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item" style={{ background: "#f1f3f4" }}>
-            <ReactAudioPlayer
+            <audio
+              id="audio"
               src={audiourl}
               download={`${meta.title}.mp3`}
               autoPlay={false}
               controls
+              onPlay={()=>{PlayerHandler()}}
             />
           </li>
           <button

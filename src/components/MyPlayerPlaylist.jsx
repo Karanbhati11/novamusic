@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
 import { nextSong } from "../Redux/Actions/Action";
 // import Api from "./Api";
-import MediaSession from "@mebtte/react-media-session";
 
 const MyPlayerPlaylist = ({
   // video_url,
@@ -24,34 +23,41 @@ const MyPlayerPlaylist = ({
   const [loopColor, setColor] = useState("grey");
   const [loop, setLoop] = useState(false);
   const dispatch = useDispatch();
+  const audio = document.getElementById("audio");
 
+  const PlayerHandler = () => {
+    navigator.mediaSession.metadata = new window.MediaMetadata({
+      title: meta.title,
+      artwork: [
+        {
+          src: meta.thumbnail,
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+    });
+
+    navigator.mediaSession.setActionHandler("play", () => {
+      audio.play();
+      console.log("playing");
+    });
+    navigator.mediaSession.setActionHandler("pause", () => {
+      audio.pause();
+      console.log("pause");
+    });
+    navigator.mediaSession.setActionHandler("nexttrack", () => {
+      dispatch(nextSong(index + 1));
+    });
+  };
+
+  const PauseHandler = () => {
+    navigator.mediaSession.setActionHandler("pause", () => {
+      audio.pause();
+      console.log("paused");
+    });
+  };
   return (
     <div className="playermain">
-      <MediaSession
-        title={meta.title}
-
-        artwork={[
-          {
-            src: `${meta.thumbnail}`,
-            sizes: "256x256,384x384,512x512",
-            type: "image/jpeg",
-          },
-          {
-            src: `${meta.thumbnail}`,
-            sizes: "96x96,128x128,192x192",
-            type: "image/jpeg",
-          },
-        ]}
-        onPlay={audiourl.play}
-        onPause={audiourl.pause}
-        // onSeekBackward={onSeekBackward}
-        // onSeekForward={onSeekForward}
-        // onPreviousTrack={playPreviousMusic}
-        onNextTrack={()=>dispatch(nextSong(index + 1))}
-      >
-        children or null
-      </MediaSession>
-
       <div className="card" style={{ width: "18rem" }}>
         <img
           className="card-img-top"
@@ -105,6 +111,7 @@ const MyPlayerPlaylist = ({
               title={`${meta.title}.mp3`}
             /> */}
             <audio
+              id="audio"
               autoPlay={autoPlay}
               controls
               loop={loop}
@@ -116,6 +123,12 @@ const MyPlayerPlaylist = ({
                 outline: "none",
                 backgroundColor: "#f1f3f4",
                 color: "red",
+              }}
+              onPlay={() => {
+                PlayerHandler();
+              }}
+              onPause={() => {
+                PauseHandler();
               }}
             >
               <source

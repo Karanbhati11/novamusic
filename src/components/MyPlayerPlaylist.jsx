@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
 import { nextSong } from "../Redux/Actions/Action";
 // import Api from "./Api";
+import MediaSession from "@mebtte/react-media-session";
 
 const MyPlayerPlaylist = ({
   // video_url,
@@ -26,6 +27,31 @@ const MyPlayerPlaylist = ({
 
   return (
     <div className="playermain">
+      <MediaSession
+        title={meta.title}
+
+        artwork={[
+          {
+            src: `${meta.thumbnail}`,
+            sizes: "256x256,384x384,512x512",
+            type: "image/jpeg",
+          },
+          {
+            src: `${meta.thumbnail}`,
+            sizes: "96x96,128x128,192x192",
+            type: "image/jpeg",
+          },
+        ]}
+        onPlay={audiourl.play}
+        onPause={audiourl.pause}
+        onSeekBackward={onSeekBackward}
+        onSeekForward={onSeekForward}
+        onPreviousTrack={playPreviousMusic}
+        onNextTrack={()=>dispatch(nextSong(index + 1))}
+      >
+        children or null
+      </MediaSession>
+
       <div className="card" style={{ width: "18rem" }}>
         <img
           className="card-img-top"

@@ -44,9 +44,9 @@ const MyPlayerPlaylist = ({
         ]}
         onPlay={audiourl.play}
         onPause={audiourl.pause}
-        onSeekBackward={onSeekBackward}
-        onSeekForward={onSeekForward}
-        onPreviousTrack={playPreviousMusic}
+        // onSeekBackward={onSeekBackward}
+        // onSeekForward={onSeekForward}
+        // onPreviousTrack={playPreviousMusic}
         onNextTrack={()=>dispatch(nextSong(index + 1))}
       >
         children or null

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Api from "../Api";
-
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [formData, setFormData] = useState({
     emailOrUserName: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,11 +16,20 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await Api.post("/login", formData);
-      console.log(response.data); // Handle success response
+      const { token } = response.data; // Extract token from response
+      localStorage.setItem("token", token); // Store token in localStorage
+      console.log("Token:", token); // Handle success response
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error.response.data.error); // Handle error response
     }
   };
+
+  useEffect(() => {
+    if (localStorage.token) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="container">

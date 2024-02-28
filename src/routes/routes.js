@@ -18,6 +18,10 @@ const Download = React.lazy(() => import("../components/Download"));
 
 export const RoutesJson = [
   {
+    path: "/",
+    element: <SearchComponent />,
+  },
+  {
     path: "/home",
     element: <SearchComponent />,
   },

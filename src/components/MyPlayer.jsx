@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./myplayer.css";
-import ReactAudioPlayer from "react-audio-player";
+// import ReactAudioPlayer from "react-audio-player";
 import Modal from "react-modal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -189,7 +189,9 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
               download={`${meta.title}.mp3`}
               autoPlay={false}
               controls
-              onPlay={()=>{PlayerHandler()}}
+              onPlay={() => {
+                PlayerHandler();
+              }}
             />
           </li>
           <button

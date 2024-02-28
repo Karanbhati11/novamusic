@@ -3,6 +3,8 @@ import React from "react";
 const SearchComponent = React.lazy(() =>
   import("../components/SearchComponent")
 );
+const Login = React.lazy(() => import("../components/database/Login"));
+const SignUp = React.lazy(() => import("../components/database/SignUp"));
 
 const PlaylistComponent = React.lazy(() =>
   import("../components/PlaylistComponent")
@@ -14,10 +16,9 @@ const PlaylistDetails = React.lazy(() =>
 );
 const Download = React.lazy(() => import("../components/Download"));
 
-
 export const RoutesJson = [
   {
-    path: "/",
+    path: "/home",
     element: <SearchComponent />,
   },
   {
@@ -31,6 +32,14 @@ export const RoutesJson = [
   {
     path: "/Export",
     element: <Export />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
   {
     path: "/test",

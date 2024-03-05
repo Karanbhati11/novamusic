@@ -17,7 +17,9 @@ const Login = () => {
     try {
       const response = await Api.post("/login", formData);
       const { token } = response.data; // Extract token from response
-      localStorage.setItem("token", token); // Store token in localStorage
+      console.log(response.data.email);
+      localStorage.token = token; // Store token in localStorage
+      localStorage.email = response.data.email; // storing the email
       console.log("Token:", token); // Handle success response
       navigate("/");
     } catch (error) {

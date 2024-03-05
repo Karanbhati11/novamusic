@@ -4,7 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = ({ name, pname }) => {
   let navigate = useNavigate();
 
-  const navigationLinks = ["Home", "Playlist", "Export", "Login", "Signup"];
+  const navigationLinks = [
+    "Home",
+    "Playlist",
+    "Export",
+    "Login",
+    "Signup",
+    "Logout",
+  ];
   return (
     <div>
       <nav className="navbar bg-dark">
@@ -40,7 +47,15 @@ const Navbar = ({ name, pname }) => {
               {navigationLinks.map((items) => {
                 return (
                   <div>
-                    <Link className="dropdown-item" to={`/${items}`}>
+                    <Link
+                      className="dropdown-item"
+                      to={`/${items}`}
+                      onClick={() => {
+                        if (items === "Logout") {
+                          localStorage.clear();
+                        }
+                      }}
+                    >
                       {items}
                     </Link>
                     <div className="dropdown-divider"></div>

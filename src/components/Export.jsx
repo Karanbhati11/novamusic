@@ -2,41 +2,74 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AES, enc } from "crypto-js";
+import Api from "./Api";
+import "./Export.css";
+
 const Export = () => {
   const [importtext, setImportText] = useState("");
   const secret = "test key";
 
   const ExportFunction = (e) => {
-    if (localStorage.getItem("Playlists") === null) {
-      toast.error("no playlists");
+    const playlists = localStorage.getItem("Playlists");
+    if (!playlists) {
+      toast.error("No playlists");
     } else {
-      navigator.clipboard.writeText(
-        localStorage.getItem("Playlists").toString()
-      );
+      const cipherText = AES.encrypt(playlists, secret).toString();
+      navigator.clipboard.writeText(cipherText);
       toast("Copied!");
     }
   };
 
-  const ImportFunction = (e) => {
-    if (importtext === "") {
-      toast.error("Plz Enter Code");
-    } else if (
-      !importtext.includes("{") ||
-      !importtext.includes(":") ||
-      !importtext.includes("[")
-    ) {
-      toast.error("Wrong code");
-    } else {
-      localStorage.setItem("Playlists", importtext);
-      setImportText("");
-      toast.success("IMPORTED !");
+  const updateDatabase = async (playlists) => {
+    try {
+      const token = localStorage.getItem("token");
+      await Api.post(
+        "/save",
+        {
+          email: localStorage.getItem("email"),
+          playlist: playlists,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success("Playlists updated in database");
+    } catch (error) {
+      console.error("Error updating playlists in database:", error);
+      toast.error("Failed to update playlists in database");
     }
   };
 
-  const ImportOneHandler = (e) => {
-    let bytes;
+  const ImportFunction = async (e) => {
     if (importtext === "") {
-      toast.error("Plz Enter Code");
+      toast.error("Please enter code");
+    } else {
+      let playlists;
+      try {
+        // Try to parse as JSON directly
+        playlists = JSON.parse(importtext);
+      } catch {
+        try {
+          // If JSON parsing fails, try to decrypt
+          const bytes = AES.decrypt(importtext, secret);
+          const decrypted = bytes.toString(enc.Utf8);
+          playlists = JSON.parse(decrypted);
+        } catch (err) {
+          toast.error("Invalid code or decryption failed");
+          return;
+        }
+      }
+
+      localStorage.setItem("Playlists", JSON.stringify(playlists));
+      setImportText("");
+      toast.success("IMPORTED!");
+      await updateDatabase(playlists);
+    }
+  };
+
+  const ImportOneHandler = async (e) => {
+    if (importtext === "") {
+      toast.error("Please enter code");
     } else if (
       importtext.includes("{") ||
       importtext.includes(":") ||
@@ -45,21 +78,19 @@ const Export = () => {
       toast.error("Wrong code");
     } else {
       try {
-        bytes = AES.decrypt(importtext, secret);
+        const bytes = AES.decrypt(importtext, secret);
         const decrypted = bytes.toString(enc.Utf8);
         const dataaa = JSON.parse(decrypted);
         const pname = Object.keys(dataaa)[0];
-        localStorage.setItem(
-          "Playlists",
-          JSON.stringify({
-            ...JSON.parse(localStorage.getItem("Playlists")),
-            [pname]: dataaa[pname],
-          })
-        );
-        toast.success("Exported");
+        const currentPlaylists =
+          JSON.parse(localStorage.getItem("Playlists")) || {};
+        currentPlaylists[pname] = dataaa[pname];
+        localStorage.setItem("Playlists", JSON.stringify(currentPlaylists));
+        toast.success("Imported one playlist!");
+        await updateDatabase(currentPlaylists);
       } catch (err) {
-        console.log("UNABLE TO DECIPHER", err);
-        toast.error("Wrong Data");
+        console.log("Unable to decipher", err);
+        toast.error("Wrong data");
       }
     }
   };
@@ -78,21 +109,8 @@ const Export = () => {
         pauseOnHover
         theme="dark"
       />
-      <div
-        className="container"
-        style={{ background: "cream ", height: "100vh", width: "100vw" }}
-      >
-        <div
-          className="main"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            marginTop: "25px",
-          }}
-        >
-          {/* <h3>EXPORT</h3> */}
+      <div className="container">
+        <div className="main">
           <button className="btn btn-dark" onClick={ExportFunction}>
             EXPORT
           </button>
@@ -103,36 +121,13 @@ const Export = () => {
           <textarea
             className="form-control"
             placeholder="Code goes here..."
-            style={{
-              marginTop: "15px",
-              width: "500px",
-              textAlign: "center",
-              backgroundColor: "wheat",
-            }}
             value={importtext}
             type="text"
             onChange={(e) => setImportText(e.target.value)}
           />
-          <button
-            className="btn btn-dark"
-            onClick={ImportOneHandler}
-            style={{ marginTop: "20px" }}
-          >
+          <button className="btn btn-dark" onClick={ImportOneHandler}>
             Import One
           </button>
-          <textarea
-            className="form-control"
-            placeholder="Code goes here..."
-            style={{
-              marginTop: "15px",
-              width: "500px",
-              textAlign: "center",
-              backgroundColor: "wheat",
-            }}
-            value={importtext}
-            type="text"
-            onChange={(e) => setImportText(e.target.value)}
-          />
         </div>
       </div>
     </React.Fragment>

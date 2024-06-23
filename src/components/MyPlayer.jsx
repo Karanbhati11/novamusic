@@ -49,7 +49,10 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
 
         await Api.post(
           url,
-          { email: localStorage.email, playlist: localStorage.Playlists },
+          {
+            email: localStorage.email,
+            playlist: JSON.parse(localStorage.Playlists),
+          },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -73,7 +76,10 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
     }
     await Api.post(
       url,
-      { email: localStorage.email, playlist: localStorage.Playlists },
+      {
+        email: localStorage.email,
+        playlist: JSON.parse(localStorage.Playlists),
+      },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -117,7 +123,10 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
         toast.success("ADDED");
         await Api.post(
           url,
-          { email: localStorage.email, playlist: localStorage.Playlists },
+          {
+            email: localStorage.email,
+            playlist: JSON.parse(localStorage.Playlists),
+          },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -139,7 +148,10 @@ const MyPlayer = ({ video_url, id, meta, audiourl }) => {
       toast.success("ADDED");
       await Api.post(
         url,
-        { email: localStorage.email, playlist: localStorage.Playlists },
+        {
+          email: localStorage.email,
+          playlist: JSON.parse(localStorage.Playlists),
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
